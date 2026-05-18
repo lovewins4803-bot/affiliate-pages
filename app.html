@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Paste → HTML Converter</title>
+
+<style>
+body{
+font-family:Arial;
+background:#020617;
+color:white;
+padding:20px;
+max-width:900px;
+margin:auto;
+}
+
+h1{
+font-size:28px;
+}
+
+textarea{
+width:100%;
+min-height:220px;
+margin-top:15px;
+padding:15px;
+border-radius:12px;
+border:none;
+background:#0f172a;
+color:white;
+}
+
+button{
+width:100%;
+padding:16px;
+margin-top:12px;
+border:none;
+border-radius:12px;
+font-size:18px;
+font-weight:bold;
+background:#4f46e5;
+color:white;
+}
+
+.output{
+min-height:400px;
+background:black;
+font-family:monospace;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📋 Paste → Convert → HTML</h1>
+
+<textarea id="inputText" placeholder="Paste copied page content here..."></textarea>
+
+<button onclick="pasteClipboard()">📥 Paste from clipboard</button>
+<button onclick="convert()">⚡ Convert to HTML</button>
+
+<h2>Generated HTML</h2>
+<textarea id="outputText" class="output"></textarea>
+
+<button onclick="copyHTML()">📋 Copy HTML</button>
+
+<script>
+
+async function pasteClipboard(){
+try{
+const text = await navigator.clipboard.readText();
+document.getElementById("inputText").value = text;
+}catch{
+alert("Clipboard blocked. Paste manually.");
+}
+}
+
+function convert(){
+
+let text = document.getElementById("inputText").value;
+
+text = text.replace(/\n/g,"</p><p>");
+
+const html = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Affiliate Page</title>
+<style>
+body{font-family:Arial;padding:30px;max-width:800px;margin:auto;line-height:1.7}
+h1{font-size:38px}
+a{background:black;color:white;padding:15px 25px;text-decoration:none;border-radius:10px}
+</style>
+</head>
+<body>
+<h1>Luxury Product Page</h1>
+<p>${text}</p>
+<br><a href="#">Check Price</a>
+</body>
+</html>
+`;
+
+document.getElementById("outputText").value = html;
+}
+
+function copyHTML(){
+let out=document.getElementById("outputText");
+out.select();
+document.execCommand("copy");
+alert("HTML copied!");
+}
+</script>
+
+</body>
+</html>
