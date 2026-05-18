@@ -2,15 +2,15 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIN AI FACTORY v6 NO API PRO</title>
+<title>PIN AI FACTORY v7 DASHBOARD</title>
 
 <style>
 body{
 font-family:Arial;
 background:#0b1220;
 color:white;
-text-align:center;
 padding:20px;
+text-align:center;
 }
 
 h1{font-size:24px}
@@ -35,75 +35,74 @@ color:white;
 cursor:pointer;
 }
 
-textarea{
-width:92%;
-height:180px;
-margin-top:10px;
-border-radius:10px;
+.card{
+background:#111827;
+margin-top:15px;
+padding:15px;
+border-radius:12px;
+text-align:left;
+}
+
+.small-btn{
+padding:8px;
+margin-top:8px;
+width:100%;
+background:#22c55e;
 border:none;
-padding:10px;
+border-radius:8px;
+color:white;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 PIN AI FACTORY v6 (NO API PRO)</h1>
+<h1>🚀 PIN AI FACTORY v7 DASHBOARD</h1>
 
 <input id="keyword" placeholder="Niche (e.g Kitchen Gadgets)">
 <input id="link" placeholder="Affiliate Link">
 
-<button onclick="generatePack()">✨ Generate Full Pin Pack</button>
+<button onclick="generate()">✨ Generate 10 Pin Cards</button>
 
-<textarea id="output" placeholder="Your Pinterest post pack appears here..."></textarea>
-
-<button onclick="copy()">📋 Copy Pinterest Post</button>
+<div id="output"></div>
 
 <script>
 
-function generatePack(){
+function generate(){
 
 let k=document.getElementById("keyword").value;
 let link=document.getElementById("link").value;
 
-let titles=[
-`🔥 Best ${k} You Must Try`,
-`Trending ${k} on Amazon`,
-`Must Have ${k} 2026`,
-`Viral ${k} Everyone Buys`,
-`Top Rated ${k} Right Now`
-];
+let container=document.getElementById("output");
+container.innerHTML="";
 
-let title=titles[Math.floor(Math.random()*titles.length)];
+for(let i=0;i<10;i++){
 
-let desc=`Discover the best ${k} available right now. Highly rated and trending products you don’t want to miss.`;
+let title=`🔥 Best ${k} #${i+1}`;
+let desc=`Top trending ${k} you must check out. Limited time deals available now.`;
+let hashtags=`#${k.replace(/ /g,'')} #AmazonFinds #Viral`;
 
-let hashtags=`#${k.replace(/ /g,'')} #AmazonFinds #TikTokMadeMeBuyIt #PinterestFinds #ViralProducts`;
+let card=document.createElement("div");
+card.className="card";
 
-let pinterestPost=`
-TITLE:
-${title}
+card.innerHTML=`
+<b>Title:</b> ${title}<br><br>
+<b>Description:</b> ${desc}<br><br>
+<b>Link:</b> ${link}<br><br>
+<b>Hashtags:</b> ${hashtags}<br><br>
 
-DESCRIPTION:
-${desc}
-
-LINK:
-${link}
-
-HASHTAGS:
-${hashtags}
-
-PIN IDEA:
-Clean luxury Pinterest style image with bold text overlay and soft background.
+<button class="small-btn" onclick="copyText('${title} | ${desc} | ${link} | ${hashtags}')">
+📋 Copy This Pin
+</button>
 `;
 
-document.getElementById("output").value=pinterestPost;
+container.appendChild(card);
 }
 
-function copy(){
-let o=document.getElementById("output");
-o.select();
-document.execCommand("copy");
+}
+
+function copyText(text){
+navigator.clipboard.writeText(text);
 alert("Copied!");
 }
 
