@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIN AI FACTORY v8 HISTORY</title>
+<title>PIN AI FACTORY DASHBOARD</title>
 
 <style>
 body{
@@ -13,133 +13,67 @@ padding:20px;
 text-align:center;
 }
 
-h1{font-size:22px}
+h1{font-size:24px}
 
-input{
-width:92%;
-padding:12px;
-margin:6px;
-border-radius:10px;
-border:none;
+.card{
+background:#111827;
+padding:18px;
+border-radius:12px;
+margin-top:12px;
 }
 
 button{
-width:92%;
+width:100%;
 padding:14px;
 margin-top:10px;
 border:none;
 border-radius:12px;
 font-weight:bold;
-background:linear-gradient(135deg,#ff2d55,#7c3aed);
+background:linear-gradient(135deg,#7c3aed,#ff2d55);
 color:white;
 cursor:pointer;
 }
 
-.card{
-background:#111827;
-margin-top:12px;
-padding:12px;
-border-radius:10px;
-text-align:left;
-}
-.small-btn{
-width:100%;
-margin-top:8px;
-padding:8px;
-background:#22c55e;
-border:none;
-border-radius:8px;
-color:white;
-}
-.danger{
-background:#ef4444;
+.small{
+font-size:13px;
+color:#94a3b8;
+margin-top:6px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 PIN AI FACTORY v8 HISTORY MODE</h1>
+<h1>🚀 PIN AI FACTORY DASHBOARD</h1>
 
-<input id="keyword" placeholder="Niche (e.g Kitchen Gadgets)">
-<input id="link" placeholder="Affiliate Link">
+<div class="card">
+<h2>📌 Pin Generator</h2>
+<p class="small">Create viral Pinterest pins</p>
+<button onclick="openPage('generator.html')">Open Tool</button>
+</div>
 
-<button onclick="generate()">✨ Generate Pin</button>
-<button onclick="clearAll()" class="danger">🗑 Clear History</button>
+<div class="card">
+<h2>📚 Pin History</h2>
+<p class="small">Saved generated pins</p>
+<button onclick="openPage('generator.html')">Open History Tool</button>
+</div>
 
-<div id="output"></div>
+<div class="card">
+<h2>🔥 Bulk Generator</h2>
+<p class="small">Generate multiple pins at once</p>
+<button onclick="openPage('generator.html')">Open Bulk Tool</button>
+</div>
+
+<div class="card">
+<h2>💰 Monetization Center</h2>
+<p class="small">Affiliate + future SaaS upgrade zone</p>
+<button onclick="alert('Coming soon')">Locked Feature</button>
+</div>
 
 <script>
-
-let history = JSON.parse(localStorage.getItem("pins") || "[]");
-
-render();
-
-function generate(){
-
-let k=document.getElementById("keyword").value;
-let link=document.getElementById("link").value;
-
-let pin={
-title:`🔥 Best ${k}`,
-desc:`Trending ${k} you should try`,
-link:link,
-time:new Date().toLocaleString()
-};
-
-history.unshift(pin);
-localStorage.setItem("pins",JSON.stringify(history));
-
-render();
+function openPage(page){
+window.location.href = page;
 }
-
-function render(){
-
-let container=document.getElementById("output");
-container.innerHTML="";
-
-history.forEach((p,i)=>{
-
-let card=document.createElement("div");
-card.className="card";
-
-card.innerHTML=`
-<b>${p.title}</b><br><br>
-${p.desc}<br><br>
-${p.link}<br><br>
-<small>${p.time}</small><br>
-
-<button class="small-btn" onclick="copy('${p.title} | ${p.desc} | ${p.link}')">
-📋 Copy
-</button>
-
-<button class="small-btn danger" onclick="removePin(${i})">
-🗑 Delete
-</button>
-`;
-
-container.appendChild(card);
-});
-
-}
-
-function copy(text){
-navigator.clipboard.writeText(text);
-alert("Copied!");
-}
-
-function removePin(i){
-history.splice(i,1);
-localStorage.setItem("pins",JSON.stringify(history));
-render();
-}
-
-function clearAll(){
-history=[];
-localStorage.removeItem("pins");
-render();
-}
-
 </script>
 
 </body>
