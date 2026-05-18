@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIN AI FACTORY v7 DASHBOARD</title>
+<title>PIN AI FACTORY v8 HISTORY</title>
 
 <style>
 body{
@@ -13,7 +13,7 @@ padding:20px;
 text-align:center;
 }
 
-h1{font-size:24px}
+h1{font-size:22px}
 
 input{
 width:92%;
@@ -37,73 +37,107 @@ cursor:pointer;
 
 .card{
 background:#111827;
-margin-top:15px;
-padding:15px;
-border-radius:12px;
+margin-top:12px;
+padding:12px;
+border-radius:10px;
 text-align:left;
 }
-
 .small-btn{
-padding:8px;
-margin-top:8px;
 width:100%;
+margin-top:8px;
+padding:8px;
 background:#22c55e;
 border:none;
 border-radius:8px;
 color:white;
+}
+.danger{
+background:#ef4444;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 PIN AI FACTORY v7 DASHBOARD</h1>
+<h1>🚀 PIN AI FACTORY v8 HISTORY MODE</h1>
 
 <input id="keyword" placeholder="Niche (e.g Kitchen Gadgets)">
 <input id="link" placeholder="Affiliate Link">
 
-<button onclick="generate()">✨ Generate 10 Pin Cards</button>
+<button onclick="generate()">✨ Generate Pin</button>
+<button onclick="clearAll()" class="danger">🗑 Clear History</button>
 
 <div id="output"></div>
 
 <script>
+
+let history = JSON.parse(localStorage.getItem("pins") || "[]");
+
+render();
 
 function generate(){
 
 let k=document.getElementById("keyword").value;
 let link=document.getElementById("link").value;
 
+let pin={
+title:`🔥 Best ${k}`,
+desc:`Trending ${k} you should try`,
+link:link,
+time:new Date().toLocaleString()
+};
+
+history.unshift(pin);
+localStorage.setItem("pins",JSON.stringify(history));
+
+render();
+}
+
+function render(){
+
 let container=document.getElementById("output");
 container.innerHTML="";
 
-for(let i=0;i<10;i++){
-
-let title=`🔥 Best ${k} #${i+1}`;
-let desc=`Top trending ${k} you must check out. Limited time deals available now.`;
-let hashtags=`#${k.replace(/ /g,'')} #AmazonFinds #Viral`;
+history.forEach((p,i)=>{
 
 let card=document.createElement("div");
 card.className="card";
 
 card.innerHTML=`
-<b>Title:</b> ${title}<br><br>
-<b>Description:</b> ${desc}<br><br>
-<b>Link:</b> ${link}<br><br>
-<b>Hashtags:</b> ${hashtags}<br><br>
+<b>${p.title}</b><br><br>
+${p.desc}<br><br>
+${p.link}<br><br>
+<small>${p.time}</small><br>
 
-<button class="small-btn" onclick="copyText('${title} | ${desc} | ${link} | ${hashtags}')">
-📋 Copy This Pin
+<button class="small-btn" onclick="copy('${p.title} | ${p.desc} | ${p.link}')">
+📋 Copy
+</button>
+
+<button class="small-btn danger" onclick="removePin(${i})">
+🗑 Delete
 </button>
 `;
 
 container.appendChild(card);
-}
+});
 
 }
 
-function copyText(text){
+function copy(text){
 navigator.clipboard.writeText(text);
 alert("Copied!");
+}
+
+function removePin(i){
+history.splice(i,1);
+localStorage.setItem("pins",JSON.stringify(history));
+render();
+}
+
+function clearAll(){
+history=[];
+localStorage.removeItem("pins");
+render();
 }
 
 </script>
