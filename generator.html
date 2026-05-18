@@ -2,21 +2,21 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIN AI FACTORY v3</title>
+<title>PIN AI FACTORY PRO v4</title>
 
 <style>
 body{
-font-family: Arial;
-text-align:center;
+font-family:Arial;
 background:#0b1220;
 color:white;
+text-align:center;
 padding:20px;
 }
 
-h1{font-size:28px;margin-bottom:10px}
+h1{font-size:28px}
 
 input,select{
-width:90%;
+width:92%;
 padding:12px;
 margin:6px;
 border-radius:10px;
@@ -30,153 +30,111 @@ margin-top:10px;
 border:none;
 border-radius:12px;
 font-weight:bold;
-cursor:pointer;
 background:linear-gradient(135deg,#ff2d55,#7c3aed);
 color:white;
+cursor:pointer;
 }
 
 canvas{
-margin-top:20px;
+margin-top:15px;
 max-width:100%;
-border-radius:12px;
+border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 PIN AI FACTORY v3</h1>
+<h1>🚀 PIN AI FACTORY PRO v4</h1>
 
-<!-- AI INPUT -->
-<input id="keyword" placeholder="Enter niche (e.g Kitchen Gadgets)">
-<button onclick="generateAI()">✨ Generate AI Text</button>
+<input id="keyword" placeholder="Niche (e.g Kitchen Gadgets)">
+<input id="link" placeholder="Affiliate Link">
 
-<!-- MANUAL OVERRIDE -->
-<input id="title" placeholder="Pin Title">
-<input id="subtitle" placeholder="Subtitle">
-
-<!-- IMAGE -->
-<input id="imgurl" placeholder="Background Image URL">
-
-<!-- TEMPLATE -->
-<select id="template">
-<option value="dark">Dark Luxury</option>
-<option value="light">Clean White</option>
-<option value="gradient">Gradient Glow</option>
-<option value="pinterest">Pinterest Red Style</option>
-<option value="minimal">Minimal Soft</option>
-</select>
-
-<button onclick="generatePin()">📌 Generate Pin</button>
+<button onclick="generateAI()">✨ Generate 10 Viral Pins</button>
 
 <canvas id="canvas" width="1000" height="1500"></canvas>
 
-<button onclick="downloadPin()">⬇ Download Pin</button>
+<button onclick="downloadAll()">⬇ Download Pin</button>
 
 <script>
 
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
-/* ---------------- AI TEXT GENERATOR ---------------- */
+let currentPins=[];
+
+/* ---------------- AI BULK GENERATOR ---------------- */
 function generateAI(){
 
 let k=document.getElementById("keyword").value;
 
-const titles=[
-"Best "+k+" You Need in 2026",
-"Trending "+k+" on Amazon",
-"Must Have "+k,
-"Viral "+k+" Everyone Buys",
-"Top Rated "+k,
-"Smart "+k+" That Change Life"
-];
+currentPins=[];
 
-const subs=[
+for(let i=0;i<10;i++){
+
+currentPins.push({
+title:[
+"Best "+k+" You Need Now",
+"Top Trending "+k,
+"Must Have "+k+" 2026",
+"Viral "+k+" on Amazon",
+"Hidden Gem "+k,
+"Smart "+k+" Upgrade",
+"Cheap "+k+" That Works",
+"Luxury "+k+" Pick",
+"Amazon Bestseller "+k,
+"Game Changing "+k
+][i],
+
+subtitle:[
 "Save Time & Money",
-"Going Viral on Pinterest",
-"Amazon Best Seller",
-"Limited Stock Alert",
-"Highly Recommended",
-"Customer Favorite"
-];
+"Going Viral Today",
+"Limited Offer",
+"Highly Rated",
+"Best Choice",
+"Top Reviewed",
+"Customer Favorite",
+"Hot Deal",
+"Must Buy",
+"Fast Selling"
+][i],
 
-document.getElementById("title").value =
-titles[Math.floor(Math.random()*titles.length)];
+template:["dark","gradient","pinterest","minimal","light"][i%5]
+});
 
-document.getElementById("subtitle").value =
-subs[Math.floor(Math.random()*subs.length)];
 }
 
-/* ---------------- PIN GENERATOR ---------------- */
-function generatePin(){
+renderPin(0);
+}
 
-const title=document.getElementById("title").value;
-const subtitle=document.getElementById("subtitle").value;
-const imgurl=document.getElementById("imgurl").value;
-const template=document.getElementById("template").value;
+/* ---------------- RENDER PIN ---------------- */
+function renderPin(i){
 
-const img=new Image();
-img.crossOrigin="anonymous";
-img.src=imgurl;
+let pin=currentPins[i];
 
-img.onload=function(){
+ctx.clearRect(0,0,1000,1500);
 
-// BACKGROUND
-ctx.drawImage(img,0,0,1000,1500);
-
-// TEMPLATES
-if(template==="dark"){
-ctx.fillStyle="rgba(0,0,0,0.45)";
+ctx.fillStyle="rgba(0,0,0,0.4)";
 ctx.fillRect(0,0,1000,1500);
-}
 
-if(template==="light"){
-ctx.fillStyle="rgba(255,255,255,0.3)";
-ctx.fillRect(0,0,1000,1500);
-}
-
-if(template==="gradient"){
-let g=ctx.createLinearGradient(0,0,1000,1500);
-g.addColorStop(0,"rgba(124,58,237,0.5)");
-g.addColorStop(1,"rgba(236,72,153,0.5)");
-ctx.fillStyle=g;
-ctx.fillRect(0,0,1000,1500);
-}
-
-if(template==="pinterest"){
-ctx.fillStyle="rgba(230,0,35,0.35)";
-ctx.fillRect(0,0,1000,1500);
-}
-
-if(template==="minimal"){
-ctx.fillStyle="rgba(255,255,255,0.2)";
-ctx.fillRect(0,0,1000,1500);
-}
-
-/* TITLE */
 ctx.fillStyle="white";
 ctx.font="bold 70px Arial";
 ctx.textAlign="center";
-wrapText(title,500,400,850,80);
 
-/* SUBTITLE */
+wrap(pin.title,500,400,850,80);
+
 ctx.font="40px Arial";
-wrapText(subtitle,500,800,800,60);
-
-};
+wrap(pin.subtitle,500,800,800,60);
 }
 
-/* TEXT WRAP */
-function wrapText(text,x,y,maxWidth,lineHeight){
+/* ---------------- TEXT WRAP ---------------- */
+function wrap(text,x,y,maxWidth,lineHeight){
 let words=text.split(" ");
 let line="";
 
 for(let i=0;i<words.length;i++){
 let test=line+words[i]+" ";
-let width=ctx.measureText(test).width;
-
-if(width>maxWidth && i>0){
+if(ctx.measureText(test).width>maxWidth && i>0){
 ctx.fillText(line,x,y);
 line=words[i]+" ";
 y+=lineHeight;
@@ -187,12 +145,15 @@ line=test;
 ctx.fillText(line,x,y);
 }
 
-/* DOWNLOAD */
-function downloadPin(){
+/* ---------------- DOWNLOAD ---------------- */
+function downloadAll(){
+
 let link=document.createElement("a");
 link.download="pin.png";
 link.href=canvas.toDataURL();
 link.click();
+
+alert("Pin downloaded!");
 }
 
 </script>
