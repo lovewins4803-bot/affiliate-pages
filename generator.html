@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIN AI FACTORY PRO v4</title>
+<title>PIN AI FACTORY v5</title>
 
 <style>
 body{
@@ -13,9 +13,9 @@ text-align:center;
 padding:20px;
 }
 
-h1{font-size:28px}
+h1{font-size:26px}
 
-input,select{
+input{
 width:92%;
 padding:12px;
 margin:6px;
@@ -45,86 +45,67 @@ border-radius:10px;
 
 <body>
 
-<h1>🚀 PIN AI FACTORY PRO v4</h1>
+<h1>🚀 PIN AI FACTORY v5 (PRO MONEY MODE)</h1>
 
 <input id="keyword" placeholder="Niche (e.g Kitchen Gadgets)">
 <input id="link" placeholder="Affiliate Link">
 
-<button onclick="generateAI()">✨ Generate 10 Viral Pins</button>
+<button onclick="generate()">✨ Generate Money Pins</button>
 
 <canvas id="canvas" width="1000" height="1500"></canvas>
 
-<button onclick="downloadAll()">⬇ Download Pin</button>
+<button onclick="downloadPin()">⬇ Download Current Pin</button>
 
 <script>
 
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
-let currentPins=[];
+let pins=[];
+let index=0;
 
-/* ---------------- AI BULK GENERATOR ---------------- */
-function generateAI(){
+/* ---------------- GENERATE PINS ---------------- */
+function generate(){
 
 let k=document.getElementById("keyword").value;
+let link=document.getElementById("link").value;
 
-currentPins=[];
+pins=[];
 
 for(let i=0;i<10;i++){
 
-currentPins.push({
-title:[
-"Best "+k+" You Need Now",
-"Top Trending "+k,
-"Must Have "+k+" 2026",
-"Viral "+k+" on Amazon",
-"Hidden Gem "+k,
-"Smart "+k+" Upgrade",
-"Cheap "+k+" That Works",
-"Luxury "+k+" Pick",
-"Amazon Bestseller "+k,
-"Game Changing "+k
-][i],
-
-subtitle:[
-"Save Time & Money",
-"Going Viral Today",
-"Limited Offer",
-"Highly Rated",
-"Best Choice",
-"Top Reviewed",
-"Customer Favorite",
-"Hot Deal",
-"Must Buy",
-"Fast Selling"
-][i],
-
-template:["dark","gradient","pinterest","minimal","light"][i%5]
+pins.push({
+title:`🔥 Best ${k} You Must Try`,
+desc:`Check Price Now → Limited Offer 🔥`,
+cta:`${link}`
 });
 
 }
 
-renderPin(0);
+index=0;
+draw(index);
 }
 
-/* ---------------- RENDER PIN ---------------- */
-function renderPin(i){
-
-let pin=currentPins[i];
+/* ---------------- DRAW PIN ---------------- */
+function draw(i){
 
 ctx.clearRect(0,0,1000,1500);
 
-ctx.fillStyle="rgba(0,0,0,0.4)";
+ctx.fillStyle="rgba(0,0,0,0.45)";
 ctx.fillRect(0,0,1000,1500);
 
 ctx.fillStyle="white";
-ctx.font="bold 70px Arial";
+ctx.font="bold 80px Arial";
 ctx.textAlign="center";
 
-wrap(pin.title,500,400,850,80);
+wrap(pins[i].title,500,500,850,90);
 
 ctx.font="40px Arial";
-wrap(pin.subtitle,500,800,800,60);
+ctx.fillText(pins[i].desc,500,850);
+
+ctx.font="30px Arial";
+ctx.fillStyle="#22c55e";
+ctx.fillText("👉 " + pins[i].cta,500,1000);
 }
 
 /* ---------------- TEXT WRAP ---------------- */
@@ -146,14 +127,12 @@ ctx.fillText(line,x,y);
 }
 
 /* ---------------- DOWNLOAD ---------------- */
-function downloadAll(){
+function downloadPin(){
 
-let link=document.createElement("a");
-link.download="pin.png";
-link.href=canvas.toDataURL();
-link.click();
-
-alert("Pin downloaded!");
+let a=document.createElement("a");
+a.download="pin.png";
+a.href=canvas.toDataURL();
+a.click();
 }
 
 </script>
