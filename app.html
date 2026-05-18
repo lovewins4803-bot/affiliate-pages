@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Paste → HTML Converter</title>
+<title>AI Landing Page Converter</title>
 
 <style>
 body{
@@ -14,9 +14,7 @@ max-width:900px;
 margin:auto;
 }
 
-h1{
-font-size:28px;
-}
+h1{font-size:28px}
 
 textarea{
 width:100%;
@@ -42,7 +40,7 @@ color:white;
 }
 
 .output{
-min-height:400px;
+min-height:450px;
 background:black;
 font-family:monospace;
 }
@@ -51,16 +49,15 @@ font-family:monospace;
 
 <body>
 
-<h1>📋 Paste → Convert → HTML</h1>
+<h1>🤖 Smart Paste → Landing Page Generator</h1>
 
-<textarea id="inputText" placeholder="Paste copied page content here..."></textarea>
+<textarea id="inputText" placeholder="Paste copied product page / Amazon description / blog post..."></textarea>
 
 <button onclick="pasteClipboard()">📥 Paste from clipboard</button>
-<button onclick="convert()">⚡ Convert to HTML</button>
+<button onclick="convert()">⚡ Generate Landing Page</button>
 
 <h2>Generated HTML</h2>
 <textarea id="outputText" class="output"></textarea>
-
 <button onclick="copyHTML()">📋 Copy HTML</button>
 
 <script>
@@ -76,26 +73,63 @@ alert("Clipboard blocked. Paste manually.");
 
 function convert(){
 
-let text = document.getElementById("inputText").value;
+let raw = document.getElementById("inputText").value;
 
-text = text.replace(/\n/g,"</p><p>");
+if(raw.trim()==""){
+alert("Paste content first!");
+return;
+}
+
+let lines = raw.split("\n").filter(l=>l.trim()!="");
+
+let title = lines[0];
+let paragraphs = lines.slice(1,6).join("</p><p>");
+
+let bullets = "";
+if(lines.length>6){
+bullets = "<ul>";
+for(let i=6;i<lines.length;i++){
+bullets += "<li>"+lines[i]+"</li>";
+}
+bullets += "</ul>";
+}
 
 const html = `
 <!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Affiliate Page</title>
+<title>${title}</title>
+
 <style>
-body{font-family:Arial;padding:30px;max-width:800px;margin:auto;line-height:1.7}
-h1{font-size:38px}
-a{background:black;color:white;padding:15px 25px;text-decoration:none;border-radius:10px}
+body{font-family:Arial;padding:30px;max-width:800px;margin:auto;line-height:1.7;background:#f8fafc}
+h1{font-size:40px}
+.cta{background:black;color:white;padding:18px 30px;text-decoration:none;border-radius:12px;font-weight:bold}
+section{margin:40px 0}
 </style>
 </head>
+
 <body>
-<h1>Luxury Product Page</h1>
-<p>${text}</p>
-<br><a href="#">Check Price</a>
+
+<h1>${title}</h1>
+
+<section>
+<p>${paragraphs}</p>
+</section>
+
+<section>
+<h2>Key Benefits</h2>
+${bullets}
+</section>
+
+<section>
+<a class="cta" href="#">🛒 Check Price Now</a>
+</section>
+
+<p style="margin-top:40px;font-size:13px;color:gray">
+As an affiliate, we may earn from qualifying purchases.
+</p>
+
 </body>
 </html>
 `;
@@ -107,7 +141,7 @@ function copyHTML(){
 let out=document.getElementById("outputText");
 out.select();
 document.execCommand("copy");
-alert("HTML copied!");
+alert("Landing page copied!");
 }
 </script>
 
