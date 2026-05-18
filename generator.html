@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIN AI FACTORY v5</title>
+<title>PIN AI FACTORY v6 NO API PRO</title>
 
 <style>
 body{
@@ -13,7 +13,7 @@ text-align:center;
 padding:20px;
 }
 
-h1{font-size:26px}
+h1{font-size:24px}
 
 input{
 width:92%;
@@ -35,104 +35,76 @@ color:white;
 cursor:pointer;
 }
 
-canvas{
-margin-top:15px;
-max-width:100%;
+textarea{
+width:92%;
+height:180px;
+margin-top:10px;
 border-radius:10px;
+border:none;
+padding:10px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🚀 PIN AI FACTORY v5 (PRO MONEY MODE)</h1>
+<h1>🚀 PIN AI FACTORY v6 (NO API PRO)</h1>
 
 <input id="keyword" placeholder="Niche (e.g Kitchen Gadgets)">
 <input id="link" placeholder="Affiliate Link">
 
-<button onclick="generate()">✨ Generate Money Pins</button>
+<button onclick="generatePack()">✨ Generate Full Pin Pack</button>
 
-<canvas id="canvas" width="1000" height="1500"></canvas>
+<textarea id="output" placeholder="Your Pinterest post pack appears here..."></textarea>
 
-<button onclick="downloadPin()">⬇ Download Current Pin</button>
+<button onclick="copy()">📋 Copy Pinterest Post</button>
 
 <script>
 
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-
-let pins=[];
-let index=0;
-
-/* ---------------- GENERATE PINS ---------------- */
-function generate(){
+function generatePack(){
 
 let k=document.getElementById("keyword").value;
 let link=document.getElementById("link").value;
 
-pins=[];
+let titles=[
+`🔥 Best ${k} You Must Try`,
+`Trending ${k} on Amazon`,
+`Must Have ${k} 2026`,
+`Viral ${k} Everyone Buys`,
+`Top Rated ${k} Right Now`
+];
 
-for(let i=0;i<10;i++){
+let title=titles[Math.floor(Math.random()*titles.length)];
 
-pins.push({
-title:`🔥 Best ${k} You Must Try`,
-desc:`Check Price Now → Limited Offer 🔥`,
-cta:`${link}`
-});
+let desc=`Discover the best ${k} available right now. Highly rated and trending products you don’t want to miss.`;
 
+let hashtags=`#${k.replace(/ /g,'')} #AmazonFinds #TikTokMadeMeBuyIt #PinterestFinds #ViralProducts`;
+
+let pinterestPost=`
+TITLE:
+${title}
+
+DESCRIPTION:
+${desc}
+
+LINK:
+${link}
+
+HASHTAGS:
+${hashtags}
+
+PIN IDEA:
+Clean luxury Pinterest style image with bold text overlay and soft background.
+`;
+
+document.getElementById("output").value=pinterestPost;
 }
 
-index=0;
-draw(index);
-}
-
-/* ---------------- DRAW PIN ---------------- */
-function draw(i){
-
-ctx.clearRect(0,0,1000,1500);
-
-ctx.fillStyle="rgba(0,0,0,0.45)";
-ctx.fillRect(0,0,1000,1500);
-
-ctx.fillStyle="white";
-ctx.font="bold 80px Arial";
-ctx.textAlign="center";
-
-wrap(pins[i].title,500,500,850,90);
-
-ctx.font="40px Arial";
-ctx.fillText(pins[i].desc,500,850);
-
-ctx.font="30px Arial";
-ctx.fillStyle="#22c55e";
-ctx.fillText("👉 " + pins[i].cta,500,1000);
-}
-
-/* ---------------- TEXT WRAP ---------------- */
-function wrap(text,x,y,maxWidth,lineHeight){
-let words=text.split(" ");
-let line="";
-
-for(let i=0;i<words.length;i++){
-let test=line+words[i]+" ";
-if(ctx.measureText(test).width>maxWidth && i>0){
-ctx.fillText(line,x,y);
-line=words[i]+" ";
-y+=lineHeight;
-}else{
-line=test;
-}
-}
-ctx.fillText(line,x,y);
-}
-
-/* ---------------- DOWNLOAD ---------------- */
-function downloadPin(){
-
-let a=document.createElement("a");
-a.download="pin.png";
-a.href=canvas.toDataURL();
-a.click();
+function copy(){
+let o=document.getElementById("output");
+o.select();
+document.execCommand("copy");
+alert("Copied!");
 }
 
 </script>
